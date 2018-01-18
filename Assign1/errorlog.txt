@@ -1,4 +1,3 @@
 
-0(16) : error C1008: undefined variable "uc"
-0(17) : error C1008: undefined variable "vc"
+0(21) : error C1035: assignment of incompatible types
 
