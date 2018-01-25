@@ -13,11 +13,11 @@ uniform float uAlpha;
 
 uniform sampler3D Noise3; //noise texture built in to glman
 
-const vec3 c0 = vec3(0.9);
-const vec3 c1 = vec3(0.9, 0.2, 0.2);
-
 void
 main() {
+	vec4 c0 = vec4(vec3(0.9) * vLightIntensity, 1.);					// Dot color
+	vec4 c1 = vec4(vec3(0.9, 0.2, 0.2) * vLightIntensity, uAlpha);		// Background color
+
 	vec3 stp = uNoiseFreq * vMCposition; //get index to sample from based on position
 	vec4 noiseVector = texture(Noise3, stp); //sample noise texture
 
@@ -32,13 +32,6 @@ main() {
 	float Br = uBd/2.;
 	int numins = int( vST.s / uAd );
 	int numint = int( vST.t / uBd );
-	/*
-	float sc = numins * uAd + Ar + sum;
-	float tc = numint * uBd + Br + sum;
-	*/
-	
-	//vec3 color = mix(c0, c1, smoothstep(1 - uTol, 1 + uTol, pow(((vST.s - sc)/Ar), 2) + pow(((vST.t - tc)/Br), 2)));
-	
 	
 	float sc = float(numins) * uAd  +  Ar;
 	float ds = vST.s - sc;                   // wrt ellipse center
@@ -57,7 +50,13 @@ main() {
 
 	float d = ds*ds + dt*dt;
 	
-	vec3 color = mix(c0, c1, smoothstep(1 - uTol, 1 + uTol, d));
+	vec4 color = mix(c0, c1, smoothstep(1 - uTol, 1 + uTol, d));
+
+	if(uAlpha == 0.) {
+		if(color == c1) {
+			discard;
+		}
+	}
 	
-	gl_FragColor = vec4(color * vLightIntensity, 1.);
+	gl_FragColor = color;
 }

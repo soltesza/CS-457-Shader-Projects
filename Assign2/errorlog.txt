@@ -1,4 +1,4 @@
 
-0(44) : error C1008: undefined variable "st"
-0(46) : error C1008: undefined variable "st"
+ERROR: 0:58: '(' : syntax error syntax error
+
 
