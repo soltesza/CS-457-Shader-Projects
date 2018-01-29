@@ -10,6 +10,7 @@ uniform float uTol = 0.0;
 uniform float uNoiseAmp;
 uniform float uNoiseFreq;
 uniform float uAlpha;
+uniform bool uUseChromaDepth;
 
 uniform sampler3D Noise3; //noise texture built in to glman
 
