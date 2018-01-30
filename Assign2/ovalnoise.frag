@@ -3,6 +3,8 @@
 in float vLightIntensity;
 in vec2 vST;
 in vec3 vMCposition;
+//in vec3 vECposition;
+in vec3 vChromaColor;
 
 uniform float uAd = 0.1;
 uniform float uBd = 0.1;
@@ -10,8 +12,6 @@ uniform float uTol = 0.0;
 uniform float uNoiseAmp;
 uniform float uNoiseFreq;
 uniform float uAlpha;
-uniform bool uUseChromaDepth;
-
 uniform sampler3D Noise3; //noise texture built in to glman
 
 void
