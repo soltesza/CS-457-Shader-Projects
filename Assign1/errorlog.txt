@@ -1,3 +1,0 @@
-
-0(21) : error C1035: assignment of incompatible types
-
