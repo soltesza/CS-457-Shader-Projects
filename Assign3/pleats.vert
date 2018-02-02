@@ -2,9 +2,10 @@
 
 uniform float uLightX, uLightY, uLightZ;
 
-out vec3 Ns;
-out vec3 Ls;
-out vec3 Es;
+out vec3 vNs;
+out vec3 vLs;
+out vec3 vEs;
+out vec3 vMC;
 
 vec3 eyeLightPosition = vec3( uLightX, uLightY, uLightZ );
 
@@ -15,12 +16,13 @@ main( )
 
 	vec4 ECposition = gl_ModelViewMatrix * gl_Vertex;
 
-	Ns = normalize( gl_NormalMatrix * gl_Normal );	// surface normal vector
+	vNs = normalize( gl_NormalMatrix * gl_Normal );	// surface normal vector
 
-	Ls = eyeLightPosition - ECposition.xyz;		// vector from the point
+	vLs = eyeLightPosition - ECposition.xyz;		// vector from the point
 									// to the light position
-	Es = vec3( 0., 0., 0. ) - ECposition.xyz;		// vector from the point
+	vEs = vec3( 0., 0., 0. ) - ECposition.xyz;		// vector from the point
 									// to the eye position 
-
+	vMC = gl_Vertex.xyz;
+	
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 }
