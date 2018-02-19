@@ -17,17 +17,20 @@ void
 main( )
 { 
 	float z = uK * (uY0 - gl_Vertex.y) * sin(2. * PI * gl_Vertex.x / uP);
-	vec4 vert = vec4(gl_Vertex.x, gl_Vertex.y, gl_Vertex.z + z, gl_Vertex.w);
+	vec4 vert = vec4(gl_Vertex.x, gl_Vertex.y, z, gl_Vertex.w);
 
-	vec4 ECposition = gl_ModelViewMatrix * gl_Vertex;
-
-	vNs = normalize( gl_NormalMatrix * gl_Normal );	// surface normal vector
-
+	vec4 ECposition = gl_ModelViewMatrix * vert;
+	
+	float dzdx = uK * (uY0-gl_Vertex.y) * (2. * PI/uP) * cos( 2. * PI * gl_Vertex.x/uP ); 
+	float dzdy = -uK * sin( 2. * PI * gl_Vertex.x/uP );
+	
+	vNs = normalize( gl_NormalMatrix * cross(vec3(1., 0., dzdx ), vec3(0., 1., dzdy)) );
+	
 	vLs = eyeLightPosition - ECposition.xyz;		// vector from the point
 									// to the light position
 	vEs = vec3( 0., 0., 0. ) - ECposition.xyz;		// vector from the point
 									// to the eye position 
-	vMC = gl_Vertex.xyz;
+	vMC = vert.xyz;
 	
 	gl_Position = gl_ModelViewProjectionMatrix * vert;
 }

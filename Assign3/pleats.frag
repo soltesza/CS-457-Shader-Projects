@@ -28,13 +28,11 @@ RotateNormal( float angx, float angy, vec3 n )
         float yp =  n.y*cx - n.z*sx;    // y'
         n.z      =  n.y*sx + n.z*cx;    // z'
         n.y      =  yp;
-        // n.x      =  n.x;
 
         // rotate about y:
         float xp =  n.x*cy + n.z*sy;    // x'
         n.z      = -n.x*sy + n.z*cy;    // z'
         n.x      =  xp;
-        // n.y      =  n.y;
 
         return normalize( n );
 }
