@@ -1,0 +1,27 @@
+##OpenGL GLIB
+
+Perspective 70
+LookAt 0 0 3  0 0 0  0 1 0
+
+Texture2D 2 RockNormal.bmp
+Texture2D 3 RockDiffuse.bmp
+Texture2D 4 RockRoughness.bmp
+Texture2D 5 SnowNormal.bmp
+Texture2D 6 SnowSpecular.bmp
+
+Vertex		snow.vert
+Fragment	snow.frag
+Program		Cold Giraffe				\
+		RockNormalMap 2					\
+		RockAlbedoMap 3					\
+		RockRoughnessMap 4				\
+		SnowNormalMap 5					\
+		SnowSpecularMap 6				\
+		LightX <-20. 5. 20.>   			\
+		LightY <-20. 10. 20.>			\
+		LightZ <-20. 20. 20.>			\
+		uBlendAmount <0. 0.5 1.>		\
+		uSnowCutoff <0. 0.5 1.>
+
+
+Obj Giraffe.obj
