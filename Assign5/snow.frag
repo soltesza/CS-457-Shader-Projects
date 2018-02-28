@@ -47,7 +47,7 @@ vec4 drawSnow(vec3 Normal, vec3 Light, vec3 Eye) {
 }
 
 vec4 drawBase(vec3 Normal, vec3 Light, vec3 Eye) {
-	vec3 baseNormal = Normal * texture(RockNormalMap, vST * rockTexRes);
+	vec3 baseNormal = Normal * texture(RockNormalMap, vST * rockTexRes).rgb;
 
 	vec4 ambient = baseKa * BaseColor;
 
@@ -71,6 +71,6 @@ void main() {
 	vec3 Light = normalize(vLs);
 	vec3 Eye = normalize(vEs);
 
-	float t = smoothstep(uSnowCutoff, uBlendAmount, (dot(inverse(gl_NormalMatrix) * Normal * texture(RockNormalMap, vST * rockTexRes), vec3(0., 1., 0.)) + 1) / 2);
+	float t = smoothstep(uSnowCutoff, uBlendAmount, (dot(inverse(gl_NormalMatrix) * Normal * texture(RockNormalMap, vST * rockTexRes).rgb, vec3(0., 1., 0.)) + 1) / 2);
 	gl_FragColor = mix(drawBase(Normal, Light, Eye), drawSnow(Normal, Light, Eye), t);
 }
