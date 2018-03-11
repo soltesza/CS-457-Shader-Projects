@@ -2,8 +2,6 @@
 
 in float gLightIntensity;
 
-uniform vec3 uColor;
-
 void main() {
-	gl_FragColor = vec4( gLightIntensity*uColor.rgb, 1. );
+	gl_FragColor = vec4( gLightIntensity*vec3(0.6, 0.3, 0.5), 1. );
 }
