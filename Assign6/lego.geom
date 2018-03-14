@@ -7,6 +7,7 @@ layout( triangle_strip, max_vertices=200 ) out;
 
 uniform int uLevel;
 uniform float uQuantize;
+uniform bool uModelCoords;
 
 in vec3 vNormal[3];
 out float gLightIntensity;
@@ -33,21 +34,26 @@ vec3 QuantizeVec3( vec3 v ) {
 }
 
 void ProduceVertex( float s, float t ) {
-	vec3 v = gl_Position[0] + vec3(s)*V01 + vec3(t)*V02;
-	v = normalize(v);
+	vec3 v = gl_in[0].gl_Position.xyz + vec3(s)*V01 + vec3(t)*V02;
 	vec3 n = v;
 	vec3 tnorm = normalize( gl_NormalMatrix * n ); // the transformed normal
 	
-	vec4 ECposition = gl_ModelViewMatrix * vec4( (1.*v), 1. );
-	gLightIntensity = abs( dot( normalize(LIGHTPOS - ECposition.xyz), tnorm ) );
-	gl_Position = gl_ProjectionMatrix * ECposition;
-	
+	if(uModelCoords) {
+		vec4 ECposition = gl_ModelViewMatrix * vec4( v, 1. );
+		gLightIntensity = abs( dot( normalize(LIGHTPOS - ECposition.xyz), tnorm ) );
+		gl_Position = gl_ProjectionMatrix * vec4(QuantizeVec3(ECposition.xyz), 1.);
+	} else {
+		vec4 ECposition = vec4( v, 1. );
+		gLightIntensity = abs( dot( normalize(LIGHTPOS - ECposition.xyz), tnorm ) );
+		gl_Position = gl_ModelViewProjectionMatrix * vec4(QuantizeVec3(ECposition.xyz), 1.);	
+	}
 	EmitVertex( );
 }
 
+
 void main() {
-	V01 = (gl_Position[1] - gl_PositionIn[0]).xyz;
-	V02 = (gl_Position[2] - gl_PositionIn[0]).xyz;
+	V01 = (gl_in[1].gl_Position - gl_in[0].gl_Position).xyz;
+	V02 = (gl_in[2].gl_Position - gl_in[0].gl_Position).xyz;
 	
 	vec3 N01 = vNormal[1] - vNormal[0];
 	vec3 N02 = vNormal[2] - vNormal[0];
@@ -56,7 +62,6 @@ void main() {
 	float dt = 1. / float( numLayers );
 	float t_top = 1.;
 	
-	//for each new triangle created by the triangle subdivision:
 	for(int it = 0; it < numLayers; it++) {
 		float t_bot = t_top - dt;
 		float smax_top = 1. - t_top;
@@ -78,3 +83,18 @@ void main() {
 		t_bot -= dt;
 	}
 }
+
+/*
+void main() {
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(QuantizeVec3(gl_in[0].gl_Position.xyz), 1.);
+	gLightIntensity = abs( dot( normalize(LIGHTPOS - gl_Position.xyz), vNormal[0] ) );
+	EmitVertex();
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(QuantizeVec3(gl_in[1].gl_Position.xyz), 1.);
+	gLightIntensity = abs( dot( normalize(LIGHTPOS - gl_Position.xyz), vNormal[0] ) );
+	EmitVertex();
+	gl_Position = gl_ModelViewProjectionMatrix * vec4(QuantizeVec3(gl_in[2].gl_Position.xyz), 1.);
+	gLightIntensity = abs( dot( normalize(LIGHTPOS - gl_Position.xyz), vNormal[0] ) );
+	EmitVertex();
+	EndPrimitive();
+}
+*/
